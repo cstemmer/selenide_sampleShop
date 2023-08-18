@@ -27,6 +27,10 @@ public class catalogStepDefs {
     private static final SelenideElement allenBrand = $(By.cssSelector(".brands-name ul > :nth-child(6) a"));
     private static final SelenideElement kookieBrand = $(By.cssSelector(".brands-name ul > :nth-child(7) a"));
     private static final SelenideElement bibaBrand = $(By.cssSelector(".brands-name ul > :nth-child(8) a"));
+    private static final SelenideElement productsHeading = $(By.cssSelector(".features_items .title"));
+    private static final SelenideElement productTile = $(By.cssSelector(".features_items .product-image-wrapper"));
+    private static final SelenideElement overlay = $(By.cssSelector(".product-overlay"));
+
 
     @Then("user can observe categories heading")
     public void userCanObserveCategoriesHeading() {
@@ -155,5 +159,53 @@ public class catalogStepDefs {
     public void userCanObserveBrandBibaWithNumberOfArticles() {
         bibaBrand.shouldBe(visible).should(matchText("\\(\\d\\)\nBIBA"))
                 .shouldHave(attribute("href", "https://automationexercise.com/brand_products/Biba"));
+    }
+
+    @Then("user can observe All Products heading")
+    public void userCanObserveAllProductsHeading() {
+        productsHeading.shouldBe(visible).shouldHave(text("All Products"));
+    }
+
+    @And("user can observe {int} product tiles")
+    public void userCanObserveProductTiles(int count) {
+        $$(".features_items .product-image-wrapper").shouldHave(size(count));
+    }
+
+    @And("within first product tile product image, price and name are visible")
+    public void withinFirstProductTileProductImagePriceAndNameAreVisible() {
+        productTile.find(By.cssSelector(".productinfo img")).shouldBe(visible)
+                .shouldHave(attributeMatching("src", ".*picture.*"));
+        productTile.find(By.cssSelector(".productinfo h2")).shouldBe(visible)
+                .should(matchText("Rs. [0-9]{1,3}"));
+        productTile.find(By.cssSelector(".productinfo p")).shouldBe(visible)
+                .should(matchText("[A-Za-z]+"));
+    }
+
+    @And("within first product tile add to cart button is visible")
+    public void withinFirstProductTileAddToCartButtonIsVisible() {
+        productTile.find(By.cssSelector(".productinfo .add-to-cart")).shouldBe(visible)
+                .shouldHave(text("Add to cart")).shouldBe(enabled);
+    }
+
+    @And("under the first product tile link to product page is visible and has right href")
+    public void underTheFirstProductTileLinkToProductPageIsVisibleAndHasRightHref() {
+        productTile.find(By.cssSelector(".choose a")).shouldBe(visible)
+                .shouldHave(text("View Product"))
+                .shouldHave(attributeMatching("href", ".*/product_details/.*"));
+    }
+
+    @And("within the hover overlay product price and name are visible")
+    public void withinTheHoverOverlayProductPriceAndNameAreVisible() {
+        productTile.scrollIntoView(true).hover();
+        overlay.find(By.cssSelector("h2")).shouldBe(visible)
+                .should(matchText("Rs. [0-9]{1,3}"));
+        overlay.find(By.cssSelector("p")).shouldBe(visible)
+                .should(matchText("[A-Za-z]+"));
+    }
+
+    @And("overlay contains add to cart button")
+    public void overlayContainsAddToCartButton() {
+        overlay.find(By.cssSelector(".add-to-cart")).shouldBe(visible)
+                .shouldHave(text("Add to cart")).shouldBe(enabled);
     }
 }

@@ -21,7 +21,7 @@ public class headerStepDefs {
     private static final SelenideElement videoTutorialsButton = $(By.xpath("//a[text()=' Video Tutorials']"));
     private static final SelenideElement contactButton = $(By.xpath("//a[text()=' Contact us']"));
     private static final SelenideElement deleteAccountButton = $(By.xpath("//a[text()=' Delete Account']"));
-    private static final SelenideElement userNotification = $(By.cssSelector("#header .shop-menu > .nav > :nth-child(10) > a"));
+    public static final SelenideElement userNotification = $(By.cssSelector("#header .shop-menu > .nav > :nth-child(10) > a"));
 
     @Then("user observes site logo with the right link")
     public void userObservesSiteLogoWithTheRightLink() {
